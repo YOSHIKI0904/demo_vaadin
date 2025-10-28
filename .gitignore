@@ -1,0 +1,8 @@
+frontend/generated/*
+.DS_Store
+*.class
+target/
+.flow-node-tasks.lock
+.serena/logs/health-checks/health_check_20251028-143641.log
+.serena
+.vscode/
