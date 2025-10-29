@@ -36,6 +36,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @JsModule("./src/railway-map.ts")
 public class RailwayMapView extends VerticalLayout {
 
+    // todo SVG部分をポップアップし、SVGの拡大率を自在に変更するサンプルを作成する。
+    // SVG部分：縦スクロール、横スクロール可能
+    // 数値スライダーを用意。スライダーを変更することで拡大率を変更する。
     private static final String MAP_CONTAINER_ID = "railway-map-container";
     private static final String CHECKBOX_CONTAINER_ID = "railway-checkbox-container";
 
