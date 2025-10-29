@@ -9,6 +9,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.RangeInput;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -32,6 +34,8 @@ import java.util.List;
 @Route("")  // ルートパス（http://localhost:8080/）でアクセス
 public class ComponentsView extends VerticalLayout {
 
+
+    // todo これ最初に宣言したほうがいいのはなぜ？
     // UI部品
     private TextField nameField;
     private TextField emailField;
@@ -45,6 +49,7 @@ public class ComponentsView extends VerticalLayout {
     private Grid<SampleData> dataGrid;
     private Button saveButton;
     private Button clearButton;
+    private RangeInput rangeInput;
 
     // データ保持用
     private ListDataProvider<SampleData> dataProvider;
@@ -84,6 +89,7 @@ public class ComponentsView extends VerticalLayout {
         content.add(createCheckboxSection());
         content.add(createButtonSection());
         content.add(createGridSection());
+        content.add(createRangeInput());
 
         Div navWrapper = new Div(navigationBar);
 
@@ -414,5 +420,39 @@ public class ComponentsView extends VerticalLayout {
         list.add(new SampleData(3L, "田中一郎", "tanaka@example.com", "無効", 35));
         list.add(new SampleData(4L, "佐藤美咲", "sato@example.com", "保留中", 28));
         return list;
+    }
+
+    /**
+     * グリッドセクション（Swing: JTable）
+     */
+    private VerticalLayout createRangeInput() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.addClassName("app-content-subsection");
+        layout.setPadding(false);
+        layout.setSpacing(true);
+        layout.setMargin(false);
+        layout.setWidthFull();
+        layout.add(new H2("9.範囲指定"));
+
+        rangeInput = new RangeInput();
+        rangeInput.setMin(0);
+        rangeInput.setMax(100);
+        rangeInput.setStep(1.0);
+        rangeInput.setValue(50.0);
+
+        // 数値を表示するためのコンポーネントを作成
+        Span valueDisplay = new Span("スライダーの値: " + rangeInput.getValue());
+        
+        // スライダーの値が変更されたときのリスナーを設定
+        rangeInput.addValueChangeListener(event -> {
+            // イベントから新しい値を取得
+            Double newValue = event.getValue();
+            
+            // 表示用のテキストを更新
+            valueDisplay.setText("スライダーの値: " + newValue);
+        });
+
+        layout.add(rangeInput, valueDisplay);
+        return layout;
     }
 }
