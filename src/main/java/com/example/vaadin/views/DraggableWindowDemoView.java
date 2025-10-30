@@ -2,11 +2,7 @@ package com.example.vaadin.views;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.dialog.DialogVariant;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -16,8 +12,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -29,9 +23,6 @@ import com.vaadin.flow.router.Route;
 public class DraggableWindowDemoView extends VerticalLayout {
 
     private final Dialog floatingDialog = new Dialog();
-    private final TextField titleField = new TextField("タイトル");
-    private final ComboBox<String> categoryField = new ComboBox<>("カテゴリ");
-    private final Checkbox pinToScreen = new Checkbox("画面上にピン留めする");
 
     public DraggableWindowDemoView() {
         setSizeFull();
@@ -67,15 +58,14 @@ public class DraggableWindowDemoView extends VerticalLayout {
         openButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         content.add(openButton);
 
-        Paragraph hint = new Paragraph("ウィンドウを閉じるにはヘッダー右上の×ボタン、もしくはEscキーを使用してください。");
+        Paragraph hint = new Paragraph("ウィンドウを閉じるにはヘッダー右上の×ボタン、または下部のボタンを利用してください。");
         hint.addClassName("app-inline-note");
         content.add(hint);
 
-        Div navWrapper = new Div(navigationBar);
         Div contentWrapper = new Div(content);
         contentWrapper.addClassName("app-content");
 
-        Div frame = new Div(navWrapper, contentWrapper);
+        Div frame = new Div(navigationBar, contentWrapper);
         frame.addClassName("app-frame");
 
         Div shell = new Div(frame);
@@ -87,29 +77,25 @@ public class DraggableWindowDemoView extends VerticalLayout {
 
     private void configureDialog() {
         floatingDialog.setModal(false);
+        // setDraggable(true) を指定すると、Vaadin Dialog のヘッダー部分をドラッグして位置を変更できる
         floatingDialog.setDraggable(true);
         floatingDialog.setResizable(false);
-        floatingDialog.setCloseOnEsc(true);
+        floatingDialog.setCloseOnEsc(false);
         floatingDialog.setCloseOnOutsideClick(false);
-        floatingDialog.addThemeVariants(DialogVariant.LUMO_NO_PADDING);
         floatingDialog.setWidth("520px");
 
-        Div dialogSurface = new Div();
-        dialogSurface.addClassName("floating-dialog");
-        dialogSurface.getStyle()
-            .set("display", "flex")
-            .set("flex-direction", "column")
-            .set("gap", "12px")
-            .set("padding", "16px")
-            .set("background", "linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%)")
-            .set("border-radius", "12px")
-            .set("box-shadow", "0 18px 36px rgba(15,23,42,0.16)")
-            .set("border", "1px solid rgba(15,23,42,0.12)");
+        floatingDialog.getElement().getStyle()
+            .set("--vaadin-dialog-header-padding", "14px 18px")
+            .set("--vaadin-dialog-content-padding", "0 18px 18px")
+            .set("--vaadin-dialog-footer-padding", "0 18px 18px")
+            .set("--vaadin-dialog-overlay-box-shadow", "0 18px 36px rgba(15,23,42,0.16)")
+            .set("--vaadin-dialog-overlay-background-color", "transparent");
 
-        dialogSurface.add(createDialogHeader(), createDialogBody(), createDialogFooter());
+        floatingDialog.getHeader().add(createDialogHeader());
 
-        floatingDialog.removeAll();
-        floatingDialog.add(dialogSurface);
+        floatingDialog.add(createDialogBody());
+
+        floatingDialog.getFooter().add(createDialogFooter());
     }
 
     private HorizontalLayout createDialogHeader() {
@@ -122,7 +108,9 @@ public class DraggableWindowDemoView extends VerticalLayout {
             .set("background", "rgba(15,23,42,0.06)")
             .set("border-radius", "9px")
             .set("padding", "10px 14px")
-            .set("gap", "16px");
+            .set("gap", "16px")
+            // ヘッダーをドラッグハンドルとして明示するためにカーソルを移動アイコンに変更
+            .set("cursor", "move");
 
         Span title = new Span("表示設定");
         title.getStyle()
@@ -131,7 +119,7 @@ public class DraggableWindowDemoView extends VerticalLayout {
             .set("letter-spacing", "0.02em")
             .set("color", "var(--app-panel-text, #17212a)");
 
-        Span hint = new Span("枠をドラッグすると移動できます");
+        Span hint = new Span("ヘッダーをドラッグして移動");
         hint.getStyle()
             .set("font-size", "13px")
             .set("color", "rgba(15,23,42,0.7)");
@@ -154,39 +142,17 @@ public class DraggableWindowDemoView extends VerticalLayout {
         body.getStyle()
             .set("background", "var(--app-panel-color, #ffffff)")
             .set("border-radius", "12px")
-            .set("padding", "18px")
-            .set("box-shadow", "inset 0 0 0 1px rgba(15,23,42,0.08)")
-            .set("display", "flex")
-            .set("flex-direction", "column")
-            .set("gap", "18px");
+            .set("padding", "24px")
+            .set("box-shadow", "inset 0 0 0 1px rgba(15,23,42,0.08)");
 
-        FormLayout formLayout = new FormLayout();
-        formLayout.setResponsiveSteps(
-            new FormLayout.ResponsiveStep("0px", 1),
-            new FormLayout.ResponsiveStep("420px", 2)
-        );
+        Paragraph message = new Paragraph("こちらはサンプルのポップアップメッセージです。画面上の任意の位置にドラッグして配置できます。");
+        message.getStyle()
+            .set("margin", "0")
+            .set("font-size", "15px")
+            .set("line-height", "1.7")
+            .set("color", "rgba(15,23,42,0.85)");
 
-        titleField.setPlaceholder("画面タイトルを入力");
-        titleField.setWidthFull();
-
-        categoryField.setItems("全体表示", "部分表示", "作業指示", "ダッシュボード");
-        categoryField.setPlaceholder("表示カテゴリーを選択");
-        categoryField.setWidthFull();
-
-        Checkbox showToolbar = new Checkbox("ツールバーを表示する");
-        showToolbar.setValue(true);
-        Checkbox showLegend = new Checkbox("凡例を下部に表示");
-        showLegend.setValue(true);
-
-        formLayout.add(titleField, categoryField, showToolbar, showLegend);
-
-        TextArea remarks = new TextArea("メモ");
-        remarks.setPlaceholder("必要な補足を入力してください");
-        remarks.setWidthFull();
-        remarks.setMaxLength(200);
-        remarks.setClearButtonVisible(true);
-
-        body.add(formLayout, remarks, pinToScreen);
+        body.add(message);
         return body;
     }
 
@@ -195,7 +161,7 @@ public class DraggableWindowDemoView extends VerticalLayout {
         footer.setWidthFull();
         footer.setSpacing(true);
         footer.setPadding(false);
-        footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        footer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
         Button close = new Button("キャンセル", event -> floatingDialog.close());
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -210,4 +176,3 @@ public class DraggableWindowDemoView extends VerticalLayout {
         return footer;
     }
 }
-
