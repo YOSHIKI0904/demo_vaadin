@@ -43,6 +43,7 @@ public class SampleNavigationBar extends HorizontalLayout {
         links.put("UIコンポーネント", ComponentsView.class);
         links.put("カレンダー操作", ButtonCalendarView.class);
         links.put("申請フォーム", ApplicationFormView.class);
+        links.put("シンプル申請", SimpleApplicationView.class);
         links.put("路線図ビュー", RailwayMapView.class);
         links.put("SVGポップアップ", SvgPopupDemoView.class);
         links.put("ドラッガブルウィンドウ", DraggableWindowDemoView.class);

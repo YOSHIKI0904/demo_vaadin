@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * 各種UI部品のサンプルView
- * Swing/AWTからVaadinへの移行例を示す
+ * レガシーUIからVaadinへの移行例を示す
  */
 @Route("")  // ルートパス（http://localhost:8080/）でアクセス
 public class ComponentsView extends VerticalLayout {
@@ -81,7 +81,7 @@ public class ComponentsView extends VerticalLayout {
 
         // タイトル
         content.add(new H1("Vaadin 24 コンポーネントサンプル"));
-        content.add(new H2("Swing/AWT からの移行例"));
+        content.add(new H2("従来UIからの移行例"));
 
         // 各セクションを追加
         content.add(createTextFieldSection());
@@ -110,7 +110,7 @@ public class ComponentsView extends VerticalLayout {
     }
 
     /**
-     * テキストフィールドセクション（Swing: JTextField）
+     * テキストフィールドセクション（JTextField の置き換え例）
      */
     private VerticalLayout createTextFieldSection() {
         VerticalLayout layout = new VerticalLayout();
@@ -148,7 +148,7 @@ public class ComponentsView extends VerticalLayout {
     }
 
     /**
-     * テキストエリアセクション（Swing: JTextArea）
+     * テキストエリアセクション（JTextArea の置き換え例）
      */
     private VerticalLayout createTextAreaSection() {
         VerticalLayout layout = new VerticalLayout();
@@ -179,7 +179,7 @@ public class ComponentsView extends VerticalLayout {
     }
 
     /**
-     * 数値スピナーセクション（Swing: JSpinner）
+     * 数値スピナーセクション（JSpinner の置き換え例）
      */
     private VerticalLayout createNumberSpinnerSection() {
         VerticalLayout layout = new VerticalLayout();
@@ -217,7 +217,7 @@ public class ComponentsView extends VerticalLayout {
 
     /**
      * セレクトボックスセクション
-     * Swing: JComboBox
+     * JComboBox の置き換え例
      */
     private VerticalLayout createSelectSection() {
         VerticalLayout layout = new VerticalLayout();
@@ -228,7 +228,7 @@ public class ComponentsView extends VerticalLayout {
         layout.setWidthFull();
         layout.add(new H2("4. セレクトボックス"));
 
-        // テキスト入力可能なコンボボックス（Swing: JComboBox with editable=true）
+        // テキスト入力可能なコンボボックス（JComboBox with editable=true に対応）
         editableComboBox = new ComboBox<>("都道府県（入力可能）");
         editableComboBox.setItems("東京都", "神奈川県", "大阪府", "愛知県", "北海道");
         editableComboBox.setAllowCustomValue(true);
@@ -241,7 +241,7 @@ public class ComponentsView extends VerticalLayout {
             Notification.show("カスタム値が入力されました: " + event.getDetail());
         });
 
-        // テキスト入力不可のセレクト（Swing: JComboBox with editable=false）
+        // テキスト入力不可のセレクト（JComboBox with editable=false に対応）
         nonEditableSelect = new Select<>();
         nonEditableSelect.setLabel("ステータス（選択のみ）");
         nonEditableSelect.setItems("有効", "無効", "保留中");
@@ -254,7 +254,7 @@ public class ComponentsView extends VerticalLayout {
     }
 
     /**
-     * ラジオボタンセクション（Swing: JRadioButton + ButtonGroup）
+     * ラジオボタンセクション（JRadioButton + ButtonGroup の置き換え例）
      */
     private VerticalLayout createRadioButtonSection() {
         VerticalLayout layout = new VerticalLayout();
@@ -280,7 +280,7 @@ public class ComponentsView extends VerticalLayout {
     }
 
     /**
-     * チェックボックスセクション（Swing: JCheckBox）
+     * チェックボックスセクション（JCheckBox の置き換え例）
      */
     private VerticalLayout createCheckboxSection() {
         VerticalLayout layout = new VerticalLayout();
@@ -307,7 +307,7 @@ public class ComponentsView extends VerticalLayout {
     }
 
     /**
-     * ボタンセクション（Swing: JButton）
+     * ボタンセクション（JButton の置き換え例）
      */
     private HorizontalLayout createButtonSection() {
         HorizontalLayout layout = new HorizontalLayout();
@@ -377,7 +377,7 @@ public class ComponentsView extends VerticalLayout {
     }
 
     /**
-     * グリッドセクション（Swing: JTable）
+     * グリッドセクション（JTable の置き換え例）
      */
     private VerticalLayout createGridSection() {
         VerticalLayout layout = new VerticalLayout();
@@ -388,7 +388,7 @@ public class ComponentsView extends VerticalLayout {
         layout.setWidthFull();
         layout.add(new H2("8. テーブル (Grid)"));
 
-        // Gridの作成（Swing: JTable）
+        // Gridの作成（JTable 相当）
         dataGrid = new Grid<>(SampleData.class, false);
         dataGrid.setHeight("220px");
 
@@ -426,7 +426,7 @@ public class ComponentsView extends VerticalLayout {
     }
 
     /**
-     * グリッドセクション（Swing: JTable）
+     * グリッドセクション（JTable の置き換え例）
      */
     private VerticalLayout createRangeInput() {
         VerticalLayout layout = new VerticalLayout();

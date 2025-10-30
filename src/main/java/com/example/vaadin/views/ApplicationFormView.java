@@ -31,7 +31,7 @@ public class ApplicationFormView extends VerticalLayout {
 
     /**
      * UserSession.sessionData へ保存する際のキー。
-     * Swing の static 変数に相当する「共有領域」をセッションごとに分割する意図を明示する。
+     * 旧UIで共有されていた static 変数に相当する「共有領域」をセッションごとに分割する意図を明示する。
      */
     public static final String SESSION_KEY = "applicationDraft";
 
@@ -151,7 +151,7 @@ public class ApplicationFormView extends VerticalLayout {
         draft.setDescription(descriptionField.getValue());
         draft.setUpdatedAt(LocalDateTime.now());
 
-        // Swing 時代の static 変数代わりに VaadinSession スコープへ格納し、別ビューでも取り出せるようにする。
+        // 従来クライアント実装で共有していた static 変数代わりに VaadinSession スコープへ格納し、別ビューでも取り出せるようにする。
         userSession.setAttribute(SESSION_KEY, draft);
         // ついでに UserSession の簡易プロフィールも更新しておくと、他画面で共通的に利用できる。
         userSession.setUserId(draft.getApplicantId());
