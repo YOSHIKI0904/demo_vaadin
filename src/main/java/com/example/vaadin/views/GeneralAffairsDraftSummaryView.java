@@ -1,7 +1,7 @@
 package com.example.vaadin.views;
 
-import com.example.vaadin.model.ApplicationDraft;
-import com.example.vaadin.session.UserSession;
+import com.example.vaadin.model.GeneralAffairsDraft;
+import com.example.vaadin.session.PortalUserSession;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -21,16 +21,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 /**
- * セッションに保存された申請内容を別画面で確認するビュー。
+ * セッションに保存された依頼内容を別画面で確認するビュー。
  */
-@Route("application/summary")
-public class ApplicationSummaryView extends VerticalLayout {
+@Route("general-affairs/draft-summary")
+public class GeneralAffairsDraftSummaryView extends VerticalLayout {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
-    private final UserSession userSession;
+    private final PortalUserSession userSession;
 
-    public ApplicationSummaryView(UserSession userSession) {
+    public GeneralAffairsDraftSummaryView(PortalUserSession userSession) {
         this.userSession = userSession;
 
         setSizeFull();
@@ -40,7 +40,7 @@ public class ApplicationSummaryView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
         addClassName("app-view");
 
-        SampleNavigationBar navigationBar = new SampleNavigationBar();
+        OperationsNavigationBar navigationBar = new OperationsNavigationBar();
 
         VerticalLayout content = new VerticalLayout();
         content.setPadding(false);
@@ -50,12 +50,12 @@ public class ApplicationSummaryView extends VerticalLayout {
         content.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.START);
         content.getStyle().set("gap", "16px");
 
-        content.add(new H1("申請内容の確認（セッション共有デモ）"));
-        content.add(new Paragraph("同一ユーザー（=同じブラウザセッション）であれば、申請フォームで保存した内容がそのまま表示されます。"));
+        content.add(new H1("下書き済みの総務依頼を確認"));
+        content.add(new Paragraph("同一ユーザー（=同じブラウザセッション）であれば、下書きフォームで保存した内容がそのまま表示されます。"));
         content.add(createSessionInfoSection());
         content.add(createDraftSection());
 
-        RouterLink backLink = new RouterLink("申請フォームに戻る", ApplicationFormView.class);
+        RouterLink backLink = new RouterLink("下書きフォームに戻る", GeneralAffairsDraftView.class);
         stylePrimaryLink(backLink);
         content.add(backLink);
 
@@ -87,8 +87,8 @@ public class ApplicationSummaryView extends VerticalLayout {
                 .map(session -> session.getSession().getId())
                 .orElse("取得できませんでした");
 
-        Paragraph userId = new Paragraph("UserSession.userId = " + Optional.ofNullable(userSession.getUserId()).orElse("(未設定)"));
-        Paragraph userName = new Paragraph("UserSession.userName = " + Optional.ofNullable(userSession.getUserName()).orElse("(未設定)"));
+        Paragraph userId = new Paragraph("PortalUserSession.userId = " + Optional.ofNullable(userSession.getUserId()).orElse("(未設定)"));
+        Paragraph userName = new Paragraph("PortalUserSession.userName = " + Optional.ofNullable(userSession.getUserName()).orElse("(未設定)"));
         Paragraph httpSession = new Paragraph("HttpSession ID = " + sessionId);
 
         layout.add(userId, userName, httpSession);
@@ -102,24 +102,24 @@ public class ApplicationSummaryView extends VerticalLayout {
         layout.setMargin(false);
         layout.setWidthFull();
         layout.addClassName("app-content-subsection");
-        layout.add(new H2("申請内容"));
+        layout.add(new H2("依頼内容"));
 
-        ApplicationDraft draft = userSession.getAttribute(ApplicationFormView.SESSION_KEY, ApplicationDraft.class);
+        GeneralAffairsDraft draft = userSession.getAttribute(GeneralAffairsDraftView.SESSION_KEY, GeneralAffairsDraft.class);
         if (draft == null) {
-            layout.add(new Paragraph("セッションに申請内容が保存されていません。"));
+            layout.add(new Paragraph("セッションに依頼内容が保存されていません。"));
             Button notifyButton = new Button("セッションが分かれているか確認する", event -> showSessionWarning());
             notifyButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             layout.add(notifyButton);
             return layout;
         }
 
-        layout.add(new Paragraph("申請者ID: " + Optional.ofNullable(draft.getApplicantId()).orElse("(未入力)")));
-        layout.add(new Paragraph("申請者名: " + Optional.ofNullable(draft.getApplicantName()).orElse("(未入力)")));
+        layout.add(new Paragraph("依頼者ID: " + Optional.ofNullable(draft.getApplicantId()).orElse("(未入力)")));
+        layout.add(new Paragraph("依頼者名: " + Optional.ofNullable(draft.getApplicantName()).orElse("(未入力)")));
         layout.add(new Paragraph("所属部署: " + Optional.ofNullable(draft.getDepartment()).orElse("(未入力)")));
-        layout.add(new Paragraph("申請区分: " + Optional.ofNullable(draft.getRequestType()).orElse("(未選択)")));
+        layout.add(new Paragraph("依頼カテゴリ: " + Optional.ofNullable(draft.getRequestType()).orElse("(未選択)")));
         layout.add(new Paragraph("最終更新: " + (draft.getUpdatedAt() == null ? "(未保存)" : FORMATTER.format(draft.getUpdatedAt()))));
 
-        Html description = new Html("<div><strong>申請内容詳細:</strong><br>" +
+        Html description = new Html("<div><strong>依頼内容詳細:</strong><br>" +
                 Optional.ofNullable(draft.getDescription()).orElse("(未入力)").replace("\n", "<br>") +
                 "</div>");
         layout.add(description);

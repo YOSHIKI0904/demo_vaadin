@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ユーザーセッション管理クラス
+ * ポータル全体で利用するユーザーセッション管理クラス。
  *
  * 旧クライアント構成での static 変数の問題点：
  * - static変数は全ユーザー共通のため、複数ユーザーが同時にアクセスするとデータが混在
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Component
 @VaadinSessionScope  // ユーザーのセッションごとに1つのインスタンスを作成
-public class UserSession implements Serializable {
+public class PortalUserSession implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -78,7 +78,7 @@ public class UserSession implements Serializable {
 
     @Override
     public String toString() {
-        return "UserSession{" +
+        return "PortalUserSession{" +
                 "userName='" + userName + '\'' +
                 ", userId='" + userId + '\'' +
                 ", sessionDataCount=" + sessionData.size() +

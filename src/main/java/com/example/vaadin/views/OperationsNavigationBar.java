@@ -12,9 +12,9 @@ import java.util.Map;
 /**
  * 主要なデモ画面間を移動するための簡易ナビゲーションバー。
  */
-public class SampleNavigationBar extends HorizontalLayout {
+public class OperationsNavigationBar extends HorizontalLayout {
 
-    public SampleNavigationBar() {
+    public OperationsNavigationBar() {
         setWidthFull();
         setSpacing(true);
         setPadding(false);
@@ -28,7 +28,7 @@ public class SampleNavigationBar extends HorizontalLayout {
             .set("box-shadow", "inset 0 -3px 0 rgba(15, 23, 42, 0.05)")
             .set("flex-shrink", "0");
 
-        Span title = new Span("サンプル一覧:");
+        Span title = new Span("デモメニュー:");
         title.getStyle()
             .set("font-weight", "700")
             .set("letter-spacing", "0.08em")
@@ -40,13 +40,13 @@ public class SampleNavigationBar extends HorizontalLayout {
 
     private void addLinks() {
         Map<String, Class<? extends Component>> links = new LinkedHashMap<>();
-        links.put("UIコンポーネント", ComponentsView.class);
-        links.put("カレンダー操作", ButtonCalendarView.class);
-        links.put("申請フォーム", ApplicationFormView.class);
-        links.put("シンプル申請", SimpleApplicationView.class);
-        links.put("路線図ビュー", RailwayMapView.class);
-        links.put("SVGポップアップ", SvgPopupDemoView.class);
-        links.put("ドラッガブルウィンドウ", DraggableWindowDemoView.class);
+        links.put("社員管理ツール", EmployeeToolkitView.class);
+        links.put("シフトカレンダー", ShiftCalendarView.class);
+        links.put("依頼下書き管理", GeneralAffairsDraftView.class);
+        links.put("総務依頼受付", GeneralAffairsRequestView.class);
+        links.put("路線図オペレーション", RailwayOperationsView.class);
+        links.put("図面プレビュー", BlueprintPreviewView.class);
+        links.put("表示設定ウィンドウ", DisplaySettingsView.class);
 
         links.forEach((text, target) -> {
             RouterLink link = new RouterLink(text, target);

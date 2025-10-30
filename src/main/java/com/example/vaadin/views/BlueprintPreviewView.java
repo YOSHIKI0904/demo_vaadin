@@ -14,11 +14,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 /**
- * SVGプレビュー用のポップアップダイアログを表示するサンプルビュー。
+ * 設備図面（SVG）をプレビューし拡大率を調整するダイアログのデモビュー。
  */
-@Route("svg-popup")
-@PageTitle("SVGポップアップデモ")
-public class SvgPopupDemoView extends VerticalLayout {
+@Route("blueprints/preview")
+@PageTitle("設備図面プレビュー")
+public class BlueprintPreviewView extends VerticalLayout {
 
     private static final int BASE_WIDTH = 640;
     private static final int BASE_HEIGHT = 360;
@@ -30,7 +30,7 @@ public class SvgPopupDemoView extends VerticalLayout {
     private final Div svgCanvas = new Div();
     private Input zoomSlider;
 
-    public SvgPopupDemoView() {
+    public BlueprintPreviewView() {
         setSizeFull();
         setPadding(false);
         setSpacing(false);
@@ -41,7 +41,7 @@ public class SvgPopupDemoView extends VerticalLayout {
         configureDialog();
 
         // デモ用ナビゲーションと各種レイアウト要素を組み合わせて画面の枠組みを作成
-        SampleNavigationBar navigationBar = new SampleNavigationBar();
+        OperationsNavigationBar navigationBar = new OperationsNavigationBar();
 
         VerticalLayout content = new VerticalLayout();
         content.setPadding(false);
@@ -51,15 +51,15 @@ public class SvgPopupDemoView extends VerticalLayout {
         content.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
         content.getStyle().set("gap", "16px");
 
-        content.add(new H1("SVGプレビュー用ポップアップ"));
-        content.add(new H2("拡大率に応じてスクロールが発生するレイアウト例"));
+        content.add(new H1("設備図面プレビュー"));
+        content.add(new H2("拡大率に応じてスクロールが変化するダイアログ構成"));
 
         Paragraph description = new Paragraph(
-            "フェーズ移行で要求されているSVGプレビューのレイアウトをVaadin Dialogで再現したデモです。"
+            "設備改修プロジェクトで利用する SVG 図面を Vaadin Dialog 上で確認する想定です。"
         );
         content.add(description);
 
-        Button openButton = new Button("SVGプレビューのダイアログを開く", event -> previewDialog.open());
+        Button openButton = new Button("図面プレビューを開く", event -> previewDialog.open());
         content.add(openButton);
 
         Div navWrapper = new Div(navigationBar);
@@ -116,7 +116,7 @@ public class SvgPopupDemoView extends VerticalLayout {
             .set("font-weight", "600")
             .set("font-size", "16px");
 
-        Span title = new Span("画面タイトル");
+        Span title = new Span("図面: A-102 配電盤配置");
         zoomValue.getStyle().set("font-weight", "600");
         headerBar.add(title, zoomValue);
         return headerBar;
@@ -159,10 +159,10 @@ public class SvgPopupDemoView extends VerticalLayout {
             .set("min-width", BASE_WIDTH_PX)
             .set("min-height", BASE_HEIGHT_PX);
 
-        Span svgLabel = new Span("SVG");
+        Span svgLabel = new Span("ELECTRICAL PLAN");
         svgLabel.getStyle().set("font-size", "24px");
 
-        Paragraph note = new Paragraph("拡大率に応じて、縦横スクロールを発生させる。");
+        Paragraph note = new Paragraph("拡大率を上げると細部まで確認でき、外周はスクロールで追従します。");
         note.getStyle().set("margin", "0");
 
         svgCanvas.add(svgLabel, note);

@@ -19,15 +19,15 @@ import java.time.YearMonth;
 import java.util.List;
 
 /**
- * カレンダー表示とボタン操作パネルのサンプルビュー。
+ * チームシフトを月単位で可視化し、日別のオンコール担当を切り替えるビュー。
  */
-@Route("calendar-buttons")
-@PageTitle("カレンダーとボタン操作サンプル")
-public class ButtonCalendarView extends VerticalLayout {
+@Route("scheduling/shifts")
+@PageTitle("シフトカレンダー")
+public class ShiftCalendarView extends VerticalLayout {
 
     private static final List<String> WEEKDAY_LABELS = List.of("月", "火", "水", "木", "金", "土", "日");
 
-    public ButtonCalendarView() {
+    public ShiftCalendarView() {
         setSizeFull();
         setPadding(false);
         setSpacing(false);
@@ -35,7 +35,7 @@ public class ButtonCalendarView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
         addClassName("app-view");
 
-        SampleNavigationBar navigationBar = new SampleNavigationBar();
+        OperationsNavigationBar navigationBar = new OperationsNavigationBar();
 
         VerticalLayout content = new VerticalLayout();
         content.setPadding(false);
@@ -45,7 +45,8 @@ public class ButtonCalendarView extends VerticalLayout {
         content.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
         content.getStyle().set("gap", "16px");
 
-        content.add(new H1("カレンダーとボタン操作サンプル"));
+        content.add(new H1("月間シフトとオンコール割り当て"));
+        content.add(new Span("オンコール担当者をカレンダー上で即時に切り替えるデモです。選択中の日付はプライマリースタイルで表示されます。"));
 
         Div borderedLayout = new Div();
         // カレンダー全体ラッパーのスタイル（インライン）

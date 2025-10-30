@@ -1,6 +1,6 @@
 package com.example.vaadin.views;
 
-import com.example.vaadin.model.SampleData;
+import com.example.vaadin.model.EmployeeProfile;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -28,11 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 各種UI部品のサンプルView
- * レガシーUIからVaadinへの移行例を示す
+ * 社員管理ツールを題材に各種 UI コンポーネントの使い方を示すビュー。
+ * レガシー UI からの移行時に想定される入力項目を例に解説する。
  */
 @Route("")  // ルートパス（http://localhost:8080/）でアクセス
-public class ComponentsView extends VerticalLayout {
+public class EmployeeToolkitView extends VerticalLayout {
 
 
     // ? これ最初に宣言したほうがいいのはなぜ？
@@ -49,15 +49,15 @@ public class ComponentsView extends VerticalLayout {
     private RadioButtonGroup<String> radioGroup;
     private Checkbox agreeCheckbox;
     private Checkbox notifyCheckbox;
-    private Grid<SampleData> dataGrid;
+    private Grid<EmployeeProfile> dataGrid;
     private Button saveButton;
     private Button clearButton;
     private RangeInput rangeInput;
 
     // データ保持用
-    private ListDataProvider<SampleData> dataProvider;
+    private ListDataProvider<EmployeeProfile> dataProvider;
 
-    public ComponentsView() {
+    public EmployeeToolkitView() {
         // データの初期化
         dataProvider = new ListDataProvider<>(createSampleData());
 
@@ -69,7 +69,7 @@ public class ComponentsView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
         addClassName("app-view");
 
-        SampleNavigationBar navigationBar = new SampleNavigationBar();
+        OperationsNavigationBar navigationBar = new OperationsNavigationBar();
 
         VerticalLayout content = new VerticalLayout();
         content.setPadding(false);
@@ -80,8 +80,8 @@ public class ComponentsView extends VerticalLayout {
         content.getStyle().set("gap", "16px");
 
         // タイトル
-        content.add(new H1("Vaadin 24 コンポーネントサンプル"));
-        content.add(new H2("従来UIからの移行例"));
+        content.add(new H1("社員管理ツールの UI コンポーネント集"));
+        content.add(new H2("人事業務で使う入力パターンを Vaadin で再現"));
 
         // 各セクションを追加
         content.add(createTextFieldSection());
@@ -119,25 +119,25 @@ public class ComponentsView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setMargin(false);
         layout.setWidthFull();
-        layout.add(new H2("1. テキストボックス (TextField)"));
+        layout.add(new H2("1. 基本情報入力 (TextField)"));
 
         // 名前入力
-        nameField = new TextField("名前");
-        nameField.setPlaceholder("山田太郎");
-        nameField.setHelperText("フルネームを入力してください");
+        nameField = new TextField("氏名");
+        nameField.setPlaceholder("山田 太郎");
+        nameField.setHelperText("戸籍上の氏名を入力してください");
         nameField.setWidth("300px");
 
         // メール入力
-        emailField = new TextField("メールアドレス");
-        emailField.setPlaceholder("example@example.com");
-        emailField.setHelperText("有効なメールアドレスを入力してください");
+        emailField = new TextField("社用メールアドレス");
+        emailField.setPlaceholder("taro.yamada@company.jp");
+        emailField.setHelperText("社内ドメインのメールアドレスを入力してください");
         emailField.setWidth("300px");
 
         // バリデーション例
         nameField.addValueChangeListener(event -> {
             if (event.getValue().length() < 2) {
                 nameField.setInvalid(true);
-                nameField.setErrorMessage("名前は2文字以上で入力してください");
+                nameField.setErrorMessage("氏名は2文字以上で入力してください");
             } else {
                 nameField.setInvalid(false);
             }
@@ -157,12 +157,12 @@ public class ComponentsView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setMargin(false);
         layout.setWidthFull();
-        layout.add(new H2("2. テキストエリア (TextArea)"));
+        layout.add(new H2("2. キャリアメモ (TextArea)"));
 
         // 説明入力
-        descriptionArea = new TextArea("説明");
-        descriptionArea.setPlaceholder("詳細な説明を入力してください...");
-        descriptionArea.setHelperText("複数行のテキストを入力できます");
+        descriptionArea = new TextArea("キャリアメモ");
+        descriptionArea.setPlaceholder("担当業務や目標、配慮事項などを入力してください...");
+        descriptionArea.setHelperText("複数行でメモを残せます");
         descriptionArea.setWidth("600px");
         descriptionArea.setHeight("120px");
         descriptionArea.setMaxLength(500);
@@ -188,23 +188,23 @@ public class ComponentsView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setMargin(false);
         layout.setWidthFull();
-        layout.add(new H2("3. 数値スピナー (IntegerField)"));
+        layout.add(new H2("3. 勤続年数 (IntegerField)"));
 
         // 年齢入力
-        ageSpinner = new IntegerField("年齢");
-        ageSpinner.setValue(30);
+        ageSpinner = new IntegerField("勤続年数（年）");
+        ageSpinner.setValue(5);
         ageSpinner.setMin(0);
-        ageSpinner.setMax(150);
+        ageSpinner.setMax(50);
         ageSpinner.setStep(1);
         ageSpinner.setWidth("200px");
-        ageSpinner.setHelperText("0〜150の範囲で入力してください");
+        ageSpinner.setHelperText("0〜50年の範囲で入力してください");
 
         // 値の変更イベント
         ageSpinner.addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                if (event.getValue() < 0 || event.getValue() > 150) {
+                if (event.getValue() < 0 || event.getValue() > 50) {
                     ageSpinner.setInvalid(true);
-                    ageSpinner.setErrorMessage("年齢は0〜150の範囲で入力してください");
+                    ageSpinner.setErrorMessage("勤続年数は0〜50年の範囲で入力してください");
                 } else {
                     ageSpinner.setInvalid(false);
                 }
@@ -226,28 +226,28 @@ public class ComponentsView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setMargin(false);
         layout.setWidthFull();
-        layout.add(new H2("4. セレクトボックス"));
+        layout.add(new H2("4. 所属・雇用区分 (Select)"));
 
         // テキスト入力可能なコンボボックス（JComboBox with editable=true に対応）
-        editableComboBox = new ComboBox<>("都道府県（入力可能）");
-        editableComboBox.setItems("東京都", "神奈川県", "大阪府", "愛知県", "北海道");
+        editableComboBox = new ComboBox<>("所属拠点（入力可能）");
+        editableComboBox.setItems("東京本社", "名古屋支社", "大阪オフィス", "福岡サービスセンター", "札幌カスタマー拠点");
         editableComboBox.setAllowCustomValue(true);
         editableComboBox.setWidth("300px");
-        editableComboBox.setHelperText("リストから選択、または直接入力できます");
+        editableComboBox.setHelperText("リストにない拠点名も直接入力できます");
 
         // カスタム値の処理
         editableComboBox.addCustomValueSetListener(event -> {
             editableComboBox.setValue(event.getDetail());
-            Notification.show("カスタム値が入力されました: " + event.getDetail());
+            Notification.show("新しい拠点を登録しました: " + event.getDetail());
         });
 
         // テキスト入力不可のセレクト（JComboBox with editable=false に対応）
         nonEditableSelect = new Select<>();
-        nonEditableSelect.setLabel("ステータス（選択のみ）");
-        nonEditableSelect.setItems("有効", "無効", "保留中");
-        nonEditableSelect.setValue("有効");
+        nonEditableSelect.setLabel("雇用区分（選択のみ）");
+        nonEditableSelect.setItems("正社員", "契約社員", "派遣社員");
+        nonEditableSelect.setValue("正社員");
         nonEditableSelect.setWidth("300px");
-        nonEditableSelect.setHelperText("リストから選択のみ可能です");
+        nonEditableSelect.setHelperText("定義済みの雇用区分から選択してください");
 
         layout.add(editableComboBox, nonEditableSelect);
         return layout;
@@ -263,16 +263,16 @@ public class ComponentsView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setMargin(false);
         layout.setWidthFull();
-        layout.add(new H2("5. ラジオボタン (RadioButtonGroup)"));
+        layout.add(new H2("5. 勤務形態 (RadioButtonGroup)"));
 
         radioGroup = new RadioButtonGroup<>();
-        radioGroup.setLabel("性別");
-        radioGroup.setItems("男性", "女性", "その他");
-        radioGroup.setValue("男性");
+        radioGroup.setLabel("勤務形態");
+        radioGroup.setItems("出社中心", "ハイブリッド", "フルリモート");
+        radioGroup.setValue("ハイブリッド");
 
         // 選択変更イベント
         radioGroup.addValueChangeListener(event -> {
-            Notification.show("選択: " + event.getValue());
+            Notification.show("勤務形態: " + event.getValue());
         });
 
         layout.add(radioGroup);
@@ -289,12 +289,12 @@ public class ComponentsView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setMargin(false);
         layout.setWidthFull();
-        layout.add(new H2("6. チェックボックス (Checkbox)"));
+        layout.add(new H2("6. ポリシー確認 (Checkbox)"));
 
-        agreeCheckbox = new Checkbox("利用規約に同意する");
+        agreeCheckbox = new Checkbox("個人情報保護方針に同意する");
         agreeCheckbox.setValue(false);
 
-        notifyCheckbox = new Checkbox("通知を受け取る");
+        notifyCheckbox = new Checkbox("評価更新時にメール通知を受け取る");
         notifyCheckbox.setValue(true);
 
         // チェック変更イベント
@@ -317,10 +317,10 @@ public class ComponentsView extends VerticalLayout {
         layout.setMargin(false);
         layout.setWidthFull();
         layout.setAlignItems(Alignment.CENTER);
-        layout.add(new H2("7. ボタン (Button)"));
+        layout.add(new H2("7. 登録アクション (Button)"));
 
         // 保存ボタン
-        saveButton = new Button("保存");
+        saveButton = new Button("プロフィールを保存");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveButton.setEnabled(false);  // 初期状態では無効（利用規約未同意）
 
@@ -328,26 +328,26 @@ public class ComponentsView extends VerticalLayout {
             // データの保存処理
             String name = nameField.getValue();
             String email = emailField.getValue();
-            // 参考: prefecture と gender は入力制御などに使用可能
-            // String prefecture = editableComboBox.getValue();
+            // 参考: office と workStyle は入力制御などに使用可能
+            // String office = editableComboBox.getValue();
             String status = nonEditableSelect.getValue();
-            // String gender = radioGroup.getValue();
+            // String workStyle = radioGroup.getValue();
 
-            long nextId = dataProvider.getItems().size() + 1L;
+            long nextId = dataProvider.getItems().size() + 1001L;
             // 新しいデータを追加
-            SampleData newData = new SampleData(
+            EmployeeProfile newData = new EmployeeProfile(
                     nextId,
                     name,
                     email,
                     status,
-                    30
+                    ageSpinner.getValue()
             );
             dataProvider.getItems().add(newData);
             dataProvider.refreshAll();
 
             // 成功メッセージ
             Notification notification = Notification.show(
-                    "データを保存しました: " + name,
+                    "社員プロフィールを保存しました: " + name,
                     3000,
                     Notification.Position.TOP_CENTER
             );
@@ -355,21 +355,21 @@ public class ComponentsView extends VerticalLayout {
         });
 
         // クリアボタン
-        clearButton = new Button("クリア");
+        clearButton = new Button("入力をリセット");
         clearButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         clearButton.addClickListener(event -> {
             nameField.clear();
             emailField.clear();
             descriptionArea.clear();
-            ageSpinner.setValue(30);
+            ageSpinner.setValue(5);
             editableComboBox.clear();
-            nonEditableSelect.setValue("有効");
-            radioGroup.setValue("男性");
+            nonEditableSelect.setValue("正社員");
+            radioGroup.setValue("ハイブリッド");
             agreeCheckbox.setValue(false);
             notifyCheckbox.setValue(true);
 
-            Notification.show("フォームをクリアしました");
+            Notification.show("入力内容をリセットしました");
         });
 
         layout.add(saveButton, clearButton);
@@ -386,18 +386,18 @@ public class ComponentsView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setMargin(false);
         layout.setWidthFull();
-        layout.add(new H2("8. テーブル (Grid)"));
+        layout.add(new H2("8. 社員一覧 (Grid)"));
 
         // Gridの作成（JTable 相当）
-        dataGrid = new Grid<>(SampleData.class, false);
+        dataGrid = new Grid<>(EmployeeProfile.class, false);
         dataGrid.setHeight("220px");
 
         // カラムの定義
-        dataGrid.addColumn(SampleData::getId).setHeader("ID").setWidth("80px");
-        dataGrid.addColumn(SampleData::getName).setHeader("名前").setWidth("150px");
-        dataGrid.addColumn(SampleData::getEmail).setHeader("メール").setWidth("200px");
-        dataGrid.addColumn(SampleData::getStatus).setHeader("ステータス").setWidth("120px");
-        dataGrid.addColumn(SampleData::getAge).setHeader("年齢").setWidth("80px");
+        dataGrid.addColumn(EmployeeProfile::getEmployeeNumber).setHeader("社員番号").setWidth("100px");
+        dataGrid.addColumn(EmployeeProfile::getFullName).setHeader("氏名").setWidth("160px");
+        dataGrid.addColumn(EmployeeProfile::getEmail).setHeader("メール").setWidth("220px");
+        dataGrid.addColumn(EmployeeProfile::getEmploymentStatus).setHeader("雇用区分").setWidth("140px");
+        dataGrid.addColumn(EmployeeProfile::getYearsOfService).setHeader("勤続年数").setWidth("120px");
 
         // データの設定
         dataGrid.setItems(dataProvider);
@@ -405,7 +405,7 @@ public class ComponentsView extends VerticalLayout {
         // 行選択イベント
         dataGrid.addSelectionListener(event -> {
             event.getFirstSelectedItem().ifPresent(data -> {
-                Notification.show("選択: " + data.getName());
+                Notification.show("選択: " + data.getFullName());
             });
         });
 
@@ -416,12 +416,12 @@ public class ComponentsView extends VerticalLayout {
     /**
      * サンプルデータの作成
      */
-    private List<SampleData> createSampleData() {
-        List<SampleData> list = new ArrayList<>();
-        list.add(new SampleData(1L, "山田太郎", "yamada@example.com", "有効", 30));
-        list.add(new SampleData(2L, "鈴木花子", "suzuki@example.com", "有効", 25));
-        list.add(new SampleData(3L, "田中一郎", "tanaka@example.com", "無効", 35));
-        list.add(new SampleData(4L, "佐藤美咲", "sato@example.com", "保留中", 28));
+    private List<EmployeeProfile> createSampleData() {
+        List<EmployeeProfile> list = new ArrayList<>();
+        list.add(new EmployeeProfile(1001L, "山田 太郎", "taro.yamada@company.jp", "正社員", 7));
+        list.add(new EmployeeProfile(1002L, "鈴木 花子", "hanako.suzuki@company.jp", "正社員", 3));
+        list.add(new EmployeeProfile(1003L, "田中 一郎", "ichiro.tanaka@company.jp", "契約社員", 2));
+        list.add(new EmployeeProfile(1004L, "佐藤 美咲", "misaki.sato@company.jp", "派遣社員", 4));
         return list;
     }
 
@@ -435,7 +435,7 @@ public class ComponentsView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setMargin(false);
         layout.setWidthFull();
-        layout.add(new H2("9.範囲指定"));
+        layout.add(new H2("9. 評価スコア調整 (RangeInput)"));
 
         rangeInput = new RangeInput();
         rangeInput.setMin(0);
@@ -444,7 +444,7 @@ public class ComponentsView extends VerticalLayout {
         rangeInput.setValue(50.0);
 
         // 数値を表示するためのコンポーネントを作成
-        Span valueDisplay = new Span("スライダーの値: " + rangeInput.getValue());
+        Span valueDisplay = new Span("評価スコア: " + rangeInput.getValue());
         
         // スライダーの値が変更されたときのリスナーを設定
         rangeInput.addValueChangeListener(event -> {
@@ -452,7 +452,7 @@ public class ComponentsView extends VerticalLayout {
             Double newValue = event.getValue();
             
             // 表示用のテキストを更新
-            valueDisplay.setText("スライダーの値: " + newValue);
+            valueDisplay.setText("評価スコア: " + newValue);
         });
 
         layout.add(rangeInput, valueDisplay);

@@ -31,10 +31,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * 路線図と補助デモをまとめた単純なビュー。
  * Java側で座標データを保持し、JavaScriptにそのまま渡す構成。
  */
-@Route("railway-map")
-@PageTitle("路線図ビュー")
+@Route("railway/operations")
+@PageTitle("運行ダイアログ付き路線図")
 @JsModule("./src/railway-map.ts")
-public class RailwayMapView extends VerticalLayout {
+public class RailwayOperationsView extends VerticalLayout {
 
     // todo SVG部分をポップアップし、SVGの拡大率を自在に変更するサンプルを作成する。
     // SVG部分：縦スクロール、横スクロール可能
@@ -74,7 +74,7 @@ public class RailwayMapView extends VerticalLayout {
 
     private String activeStationId;
 
-    public RailwayMapView() {
+    public RailwayOperationsView() {
         setSizeFull();
         setPadding(false);
         setSpacing(false);
@@ -90,8 +90,8 @@ public class RailwayMapView extends VerticalLayout {
         content.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
         content.getStyle().set("gap", "16px");
 
-        content.add(new H1("SVG路線図デモ"));
-        content.add(new H2("駅クリックで詳細設定、線クリックでハイライト"));
+        content.add(new H1("運行ダイアグラム付き路線図"));
+        content.add(new H2("駅クリックで運行メモ編集、線クリックで区間ハイライト"));
 
         Div description = new Div(
             new Span("駅・踏切の座標と線路の接続はJavaで定義し、"),
@@ -118,7 +118,7 @@ public class RailwayMapView extends VerticalLayout {
         Div contentWrapper = new Div(content);
         contentWrapper.addClassName("app-content");
 
-        Div frame = new Div(new SampleNavigationBar(), contentWrapper);
+        Div frame = new Div(new OperationsNavigationBar(), contentWrapper);
         frame.addClassName("app-frame");
 
         Div shell = new Div(frame);

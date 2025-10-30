@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 申請画面で入力した内容をセッションに保持するためのDTO。
+ * 総務依頼フォームの入力内容をセッションに保持するための DTO。
  */
-public class ApplicationDraft implements Serializable {
+public class GeneralAffairsDraft implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

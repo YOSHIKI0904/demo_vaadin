@@ -6,13 +6,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Vaadin 24 アプリケーションのエントリーポイント
+ * 社内オペレーション向けデモアプリケーションのエントリーポイント。
  */
 @SpringBootApplication
 @Theme("fixedlayout")
-public class Application implements AppShellConfigurator {
+public class OperationsShowcaseApplication implements AppShellConfigurator {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(OperationsShowcaseApplication.class, args);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.vaadin.views;
 
-import com.example.vaadin.model.SimpleApplicationRequest;
-import com.example.vaadin.services.ApplicationRequestService;
+import com.example.vaadin.model.GeneralAffairsRequest;
+import com.example.vaadin.services.GeneralAffairsRequestService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.button.Button;
@@ -35,37 +35,37 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Vaadin 24 の推奨コーディングスタイルに沿ったシンプルな申請フォーム。
+ * 総務部門への依頼を受け付けるフォームビュー。
  * <p>
- * Bean Validation を利用して入力チェックを行い、サービス層へ DTO を渡す責務に集中させている。
+ * Bean Validation による入力チェックと簡易的な受付履歴の表示機能を兼ね備えている。
  */
-@Route("application/simple")
-@PageTitle("シンプル申請フォーム")
-public class SimpleApplicationView extends VerticalLayout {
+@Route("general-affairs/requests")
+@PageTitle("総務依頼の受付")
+public class GeneralAffairsRequestView extends VerticalLayout {
 
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
-    private final ApplicationRequestService requestService;
+    private final GeneralAffairsRequestService requestService;
 
-    private final BeanValidationBinder<SimpleApplicationRequest> binder =
-        new BeanValidationBinder<>(SimpleApplicationRequest.class);
+    private final BeanValidationBinder<GeneralAffairsRequest> binder =
+        new BeanValidationBinder<>(GeneralAffairsRequest.class);
 
-    private final TextField applicantId = new TextField("申請者ID");
-    private final TextField applicantName = new TextField("申請者名");
+    private final TextField applicantId = new TextField("依頼者ID");
+    private final TextField applicantName = new TextField("依頼者名");
     private final EmailField contactEmail = new EmailField("連絡先メールアドレス");
     private final TextField department = new TextField("所属部署");
-    private final ComboBox<String> requestType = new ComboBox<>("申請区分");
+    private final ComboBox<String> requestType = new ComboBox<>("依頼カテゴリ");
     private final DatePicker desiredDate = new DatePicker("希望実施日");
-    private final TextArea description = new TextArea("申請内容詳細");
+    private final TextArea description = new TextArea("依頼内容詳細");
 
-    private final Button submitButton = new Button("申請を送信");
+    private final Button submitButton = new Button("依頼を送信");
     private final Button resetButton = new Button("入力をリセット");
 
-    private final Grid<ApplicationRequestService.SubmissionLog> historyGrid =
-        new Grid<>(ApplicationRequestService.SubmissionLog.class, false);
-    private final Paragraph emptyHistoryMessage = new Paragraph("まだ申請履歴はありません。");
+    private final Grid<GeneralAffairsRequestService.SubmissionRecord> historyGrid =
+        new Grid<>(GeneralAffairsRequestService.SubmissionRecord.class, false);
+    private final Paragraph emptyHistoryMessage = new Paragraph("まだ受付履歴はありません。");
 
-    public SimpleApplicationView(ApplicationRequestService requestService) {
+    public GeneralAffairsRequestView(GeneralAffairsRequestService requestService) {
         this.requestService = requestService;
 
         setSizeFull();
@@ -82,7 +82,7 @@ public class SimpleApplicationView extends VerticalLayout {
         refreshHistory();
         resetForm();
 
-        SampleNavigationBar navigationBar = new SampleNavigationBar();
+        OperationsNavigationBar navigationBar = new OperationsNavigationBar();
 
         VerticalLayout content = createContentLayout();
 
@@ -125,9 +125,9 @@ public class SimpleApplicationView extends VerticalLayout {
         header.addClassName("app-content-subsection");
         header.getStyle().set("gap", "8px");
 
-        header.add(new H1("シンプル申請フォーム"));
-        header.add(new Paragraph("最小構成の入力項目とバリデーションのみを備えた申請画面のサンプルです。"
-            + "Bean Validation による必須チェックと、サービス層への責務分離例を示しています。"));
+        header.add(new H1("総務依頼の受付"));
+        header.add(new Paragraph("備品調達や出張手配など、総務部門に寄せられる代表的な依頼をまとめて受け付けます。"
+            + "必須項目のバリデーションと受付履歴の参照方法を示す実装例です。"));
 
         return header;
     }
@@ -141,7 +141,7 @@ public class SimpleApplicationView extends VerticalLayout {
         container.addClassName("app-content-subsection");
         container.getStyle().set("gap", "16px");
 
-        H2 title = new H2("申請内容の入力");
+        H2 title = new H2("依頼内容の入力");
         title.getStyle().set("margin", "0");
 
         FormLayout formLayout = new FormLayout();
@@ -175,7 +175,7 @@ public class SimpleApplicationView extends VerticalLayout {
         historySection.addClassName("app-content-subsection");
         historySection.getStyle().set("gap", "12px");
 
-        H2 title = new H2("直近の申請履歴");
+        H2 title = new H2("直近の受付履歴");
         title.getStyle().set("margin", "0");
 
         emptyHistoryMessage.getStyle()
@@ -213,7 +213,7 @@ public class SimpleApplicationView extends VerticalLayout {
 
         requestType.setWidthFull();
         requestType.setRequiredIndicatorVisible(true);
-        requestType.setItems("備品購入", "出張申請", "システム権限", "その他");
+        requestType.setItems("備品購入", "出張手配", "システム権限付与", "オフィスレイアウト変更");
         requestType.setPlaceholder("選択してください");
         requestType.setClearButtonVisible(true);
 
@@ -228,7 +228,7 @@ public class SimpleApplicationView extends VerticalLayout {
         description.setMinHeight("160px");
         description.setMaxLength(500);
         description.setValueChangeMode(ValueChangeMode.EAGER);
-        description.setPlaceholder("チームへの共有事項などを記載してください（500文字以内）");
+        description.setPlaceholder("依頼の背景や特記事項を記載してください（500文字以内）");
         description.addValueChangeListener(event -> {
             String value = event.getValue();
             updateDescriptionHelper(value == null ? 0 : value.length());
@@ -248,14 +248,14 @@ public class SimpleApplicationView extends VerticalLayout {
             .setAutoWidth(true)
             .setFlexGrow(0);
         historyGrid.addColumn(log -> log.request().getApplicantId())
-            .setHeader("申請者ID")
+            .setHeader("依頼者ID")
             .setAutoWidth(true)
             .setFlexGrow(0);
         historyGrid.addColumn(log -> log.request().getApplicantName())
-            .setHeader("申請者名")
+            .setHeader("依頼者名")
             .setAutoWidth(true);
         historyGrid.addColumn(log -> log.request().getRequestType())
-            .setHeader("申請区分")
+            .setHeader("依頼カテゴリ")
             .setAutoWidth(true)
             .setFlexGrow(0);
         historyGrid.addColumn(log -> formatDesiredDate(log.request()))
@@ -284,12 +284,12 @@ public class SimpleApplicationView extends VerticalLayout {
 
     private void handleSubmit() {
         try {
-            SimpleApplicationRequest request = new SimpleApplicationRequest();
+            GeneralAffairsRequest request = new GeneralAffairsRequest();
             binder.writeBean(request);
             requestService.submit(request);
             refreshHistory();
             resetForm();
-            Notification notification = Notification.show("申請を受け付けました", 3000, Notification.Position.TOP_CENTER);
+            Notification notification = Notification.show("依頼内容を総務部門に連携しました", 3000, Notification.Position.TOP_CENTER);
             notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             applicantId.focus();
         } catch (ValidationException ex) {
@@ -300,7 +300,7 @@ public class SimpleApplicationView extends VerticalLayout {
     }
 
     private void refreshHistory() {
-        List<ApplicationRequestService.SubmissionLog> latest = requestService.findLatest();
+        List<GeneralAffairsRequestService.SubmissionRecord> latest = requestService.findLatest();
         historyGrid.setItems(latest);
         boolean hasHistory = !latest.isEmpty();
         historyGrid.setVisible(hasHistory);
@@ -333,7 +333,7 @@ public class SimpleApplicationView extends VerticalLayout {
         description.setHelperText(currentLength + " / 500 文字");
     }
 
-    private String formatDesiredDate(SimpleApplicationRequest request) {
+    private String formatDesiredDate(GeneralAffairsRequest request) {
         LocalDate date = request.getDesiredDate();
         return date == null ? "-" : date.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }

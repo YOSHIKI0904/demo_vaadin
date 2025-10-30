@@ -23,5 +23,5 @@ mvn spring-boot:run
 
 ```bash
 mvn clean package
-java -jar target/vaadin-migration-example-1.0-SNAPSHOT.jar
+java -jar target/operations-portal-demo-1.0-SNAPSHOT.jar
 ```

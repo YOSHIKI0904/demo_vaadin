@@ -16,15 +16,15 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 /**
- * ボタンから開くドラッガブルなポップアップウィンドウのデモビュー。
+ * ダッシュボードの表示設定を調整するドラッガブルなポップアップダイアログのデモ。
  */
-@Route("draggable-window")
-@PageTitle("ドラッガブルウィンドウ")
-public class DraggableWindowDemoView extends VerticalLayout {
+@Route("display/settings")
+@PageTitle("表示設定ダイアログ")
+public class DisplaySettingsView extends VerticalLayout {
 
     private final Dialog floatingDialog = new Dialog();
 
-    public DraggableWindowDemoView() {
+    public DisplaySettingsView() {
         setSizeFull();
         setPadding(false);
         setSpacing(false);
@@ -34,7 +34,7 @@ public class DraggableWindowDemoView extends VerticalLayout {
 
         configureDialog();
 
-        SampleNavigationBar navigationBar = new SampleNavigationBar();
+        OperationsNavigationBar navigationBar = new OperationsNavigationBar();
 
         VerticalLayout content = new VerticalLayout();
         content.setPadding(false);
@@ -44,17 +44,17 @@ public class DraggableWindowDemoView extends VerticalLayout {
         content.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
         content.getStyle().set("gap", "18px");
 
-        content.add(new H1("可動ウィンドウのサンプル"));
-        content.add(new H2("ボタンから開き、マウスで自由に移動できる設定画面"));
+        content.add(new H1("ダッシュボード表示設定ウィンドウ"));
+        content.add(new H2("ボタン操作で開き、ドラッグでレイアウト位置を調整可能"));
 
         Paragraph intro = new Paragraph(
-            "下のボタンを押すと設定ウィンドウが表示されます。ウィンドウはダイアログとして表示され、"
-                + "ヘッダー部分をドラッグすることで任意の位置に移動できます。"
+            "下のボタンから開く設定ウィンドウでは、パネルの表示・非表示や色調整などを操作する想定です。"
+                + "ドラッグ操作で任意の位置に配置し、最終確認後に適用します。"
         );
         intro.getStyle().set("margin", "0");
         content.add(intro);
 
-        Button openButton = new Button("設定ウィンドウを表示", event -> floatingDialog.open());
+        Button openButton = new Button("表示設定を開く", event -> floatingDialog.open());
         openButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         content.add(openButton);
 
@@ -145,7 +145,7 @@ public class DraggableWindowDemoView extends VerticalLayout {
             .set("padding", "24px")
             .set("box-shadow", "inset 0 0 0 1px rgba(15,23,42,0.08)");
 
-        Paragraph message = new Paragraph("こちらはサンプルのポップアップメッセージです。画面上の任意の位置にドラッグして配置できます。");
+        Paragraph message = new Paragraph("ウィジェットの表示密度や配色を調整するプレビュー領域です。内容を確認しながらドラッグで配置を検証できます。");
         message.getStyle()
             .set("margin", "0")
             .set("font-size", "15px")
@@ -168,7 +168,7 @@ public class DraggableWindowDemoView extends VerticalLayout {
 
         Button apply = new Button("設定を適用", event -> {
             floatingDialog.close();
-            Notification.show("設定を保存しました", 2500, Notification.Position.BOTTOM_CENTER);
+            Notification.show("ダッシュボード設定を保存しました", 2500, Notification.Position.BOTTOM_CENTER);
         });
         apply.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 

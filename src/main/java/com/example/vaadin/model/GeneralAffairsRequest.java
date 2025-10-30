@@ -9,12 +9,12 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * シンプルな申請フォームで扱う入力値をまとめた DTO。
+ * 総務部門向け依頼フォームで扱う入力値をまとめた DTO。
  * <p>
  * Vaadin Binder から Bean Validation を利用できるよう Jakarta Validation のアノテーションを付与している。
  * 必須項目や最大文字数に関するビジネスルールが変わった場合はこのクラスを更新する。
  */
-public class SimpleApplicationRequest implements Serializable {
+public class GeneralAffairsRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
