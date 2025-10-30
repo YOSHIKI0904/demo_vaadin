@@ -35,7 +35,10 @@ import java.util.List;
 public class ComponentsView extends VerticalLayout {
 
 
-    // todo これ最初に宣言したほうがいいのはなぜ？
+    // ? これ最初に宣言したほうがいいのはなぜ？
+    // クラス内の複数メソッド（イベントハンドラ含む）から参照するためフィールド化が妥当。
+    // final によりビュー生成時に一度だけ初期化され再代入されないことも明示でき、ローカル変数にした場合に生じる参照の受け渡しも不要になる。
+
     // UI部品
     private TextField nameField;
     private TextField emailField;
