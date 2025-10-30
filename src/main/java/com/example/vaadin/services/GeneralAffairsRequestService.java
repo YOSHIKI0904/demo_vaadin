@@ -24,9 +24,9 @@ public class GeneralAffairsRequestService {
     private final CopyOnWriteArrayList<SubmissionRecord> submissionLogs = new CopyOnWriteArrayList<>();
 
     /**
-     * 申請内容を登録し、簡易的な履歴として保持する。
+     * 依頼内容を登録し、簡易的な履歴として保持する。
      *
-     * @param request 画面で入力された申請情報
+     * @param request 画面で入力された依頼情報
      */
     public void submit(GeneralAffairsRequest request) {
         submissionLogs.add(new SubmissionRecord(LocalDateTime.now(), request));
@@ -51,7 +51,7 @@ public class GeneralAffairsRequestService {
     }
 
     /**
-     * 申請登録のメタデータ。
+     * 依頼登録のメタデータ。
      */
     public record SubmissionRecord(LocalDateTime submittedAt, GeneralAffairsRequest request) {
     }
